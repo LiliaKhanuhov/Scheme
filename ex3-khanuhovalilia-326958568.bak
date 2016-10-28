@@ -1,0 +1,54 @@
+; Name: Khanuhov Lilia
+; ID:   326958568
+
+; Part 1 – Simple macro
+
+; A.
+(defmacro absolute (x) 
+  `(let ((_x ,x)) 
+     (if (< _x 0) 
+         (* _x -1)
+         _x)))
+
+; B.
+(defmacro cone-volume (radius height) 
+  `(let ((r ,radius) (h ,height)) 
+     (* (/ 1 3) pi (* r r) h)))
+
+; Part 2 – A bit harder macro
+(defmacro multListBy2 (lst) 
+  `(begin 
+     (define (helper list) 
+       (if (null? list) 
+           () 
+           (cons (* 2 (car list)) (helper (cdr list)))))
+     (helper ,lst)))
+
+; Part 3 – Less-Than macro
+
+; A
+(defmacro less-than1 (x . rules)  
+  (define (helper list) 
+    `((< result ,(car list)) ,(cadr list)))  
+  `(let ((result ,x))
+     (cond ,@(map helper rules))))
+
+; B
+(defmacro less-than2 (x . rules) 
+  (define (helper list) 
+    `((< result ,(car list)) ,(cadr list)) 
+    `((eq? 'else' ,(car list)) ,(cadr list)))  
+  `(let ((result ,x))
+     (cond ,@(map helper rules))))
+
+; Part 4 – Boolean Logic
+(defmacro nor (x . arguments) 
+  (define (iter-or lst) 
+    (if (null? lst) 
+        `val 
+        `(let ((val ,(car lst)))
+           (if  val
+                #t
+                ,(iter-or (cdr lst))))))           
+  `(not ,(iter-or (cons x arguments))))
+
